@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HBD ນ້ຳຝົນ 17</title>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1b2e;--bg2:#1b2a4a;--drop:#8fd3ff;--flame:#ffc247;--coral:#ff7a6b;--ink:#f4f7fb;--mint:#7de2c3}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:radial-gradient(120% 90% at 50% 100%,var(--bg2),var(--bg));color:var(--ink);font-family:'Sarabun',sans-serif;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+main{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;padding-top:max(24px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.scene{display:none;flex-direction:column;align-items:center;gap:22px;max-width:520px;width:100%}
+.scene.on{display:flex;animation:in .9s ease both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1,h2{font-family:'Mali',cursive;line-height:1.25}
+h1{font-size:clamp(28px,7vw,40px);font-weight:600}
+p{font-size:18px;line-height:1.7;color:#cfe0f2}
+button{font-family:'Mali',cursive;font-size:20px;font-weight:700;color:#1a1200;background:var(--flame);border:0;border-radius:999px;padding:14px 34px;cursor:pointer;box-shadow:0 0 0 0 rgba(255,194,71,.6);animation:pulse 2s infinite}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+button.ghost{background:transparent;color:var(--drop);border:2px solid var(--drop);animation:none;font-size:16px;padding:10px 24px}
+@keyframes pulse{70%{box-shadow:0 0 0 18px rgba(255,194,71,0)}100%{box-shadow:0 0 0 0 rgba(255,194,71,0)}}
+.count{font-family:'Mali',cursive;font-size:84px;font-weight:700;color:var(--flame);line-height:1;text-shadow:0 0 30px rgba(255,194,71,.5)}
+.candles{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 12px;max-width:340px}
+.c{width:14px;height:44px;border-radius:3px;position:relative;background:linear-gradient(90deg,#fff 0 50%,#ffd9d3 50%);}
+.c:nth-child(3n){background:linear-gradient(90deg,#bfe9ff 0 50%,#8fd3ff 50%)}
+.c:nth-child(3n+1){background:linear-gradient(90deg,#fff3c4 0 50%,#ffe08a 50%)}
+.c::before{content:"";position:absolute;left:50%;top:-24px;width:12px;height:22px;margin-left:-6px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:radial-gradient(ellipse at 50% 70%,#fff6d0,var(--flame) 60%,var(--coral));transform:scale(0);transform-origin:50% 100%;transition:transform .35s cubic-bezier(.3,1.6,.5,1);filter:drop-shadow(0 0 8px var(--flame))}
+.c.lit::before{transform:scale(1);animation:flick .5s infinite alternate}
+.c.out::before{transform:scale(0);animation:none;transition:transform .25s}
+@keyframes flick{to{transform:scale(1.08,.94) rotate(3deg)}}
+.big{font-size:clamp(96px,30vw,150px);font-family:'Mali',cursive;font-weight:700;line-height:.9;background:linear-gradient(160deg,var(--drop),var(--mint) 45%,var(--flame));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(143,211,255,.3);border-radius:22px;padding:22px 24px;backdrop-filter:blur(6px)}
+.card p{color:var(--ink);font-size:18px;min-height:7.2em;text-align:left}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<main>
+  <section class="scene on" id="s1">
+    <h1>ຝົນ<br>ມີຫຍັງກຳລັງຖ້າຢູ່~~</h1>
+    <p>ຝົນຕົກໜັກສຳ່ໃດ<br>ກະຍັງມີທຽນຢູ່555</p>
+    <button id="go">ກົດນີ່</button>
+  </section>
+
+  <section class="scene" id="s2">
+    <div class="count" id="n">0</div>
+    <div class="candles" id="candles" aria-label="ຄຸນທຽນ 17 ອັນ"></div>
+    <p id="hint">ຈູດທຽນໃຫ້ຢູ່555</p>
+    <button id="blow" style="display:none">ເປົ່າເລີຍຍ</button>
+  </section>
+
+  <section class="scene" id="s3">
+    <h2 style="font-size:clamp(22px,5.5vw,30px)">ສຸສັນວັນເກີດ ນ້ຳຝົນ</h2>
+    <div class="big">17</div>
+    <div class="card"><p id="msg"></p></div>
+    <button class="ghost" id="again">ເບິ່ງອີກເທື່ອຫນຶ່ງ</button>
+  </section>
+</main>
+
+<script>
+// ===== แก้ข้อความตรงนี้ได้เลย =====
+const NAME = "ນຳ້ຝົນ";
+const MESSAGE =
+`17 ແລ້ວ ດຽວກະຈົບໄປຈີນລະເດ ສຸຂະພາບແຂງແຮງຮັກກັບທຽນຫລາຍໆມັກຄູ່ນີ້ແຮງ ລະກະຂໍໂທດທີ່ບາງເທື່ອອາດຈະເວົ້າກວນຫຼາຍເກີນໄປຄຸນທຽນນຳ ຄິດຫຍັງບໍ່ອອກ ໄປລະ 🎂`;
+// ===================================
+
+const $=id=>document.getElementById(id);
+const cv=$('fx'),ctx=cv.getContext('2d');
+let W,H,dpr=Math.min(devicePixelRatio||1,2);
+function size(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',size);size();
+
+const colors=['#ffc247','#ff7a6b','#8fd3ff','#7de2c3','#ffffff','#c9a7ff'];
+let drops=[],sparks=[],confetti=[],celebrate=false,fireT=0;
+for(let i=0;i<110;i++)drops.push({x:Math.random()*W,y:Math.random()*H,l:10+Math.random()*18,v:6+Math.random()*7});
+
+function burst(x,y){
+  const c=colors[Math.random()*colors.length|0],n=46;
+  for(let i=0;i<n;i++){const a=i/n*Math.PI*2,s=2+Math.random()*4;
+    sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,c})}
+}
+function drop(){for(let i=0;i<4;i++)confetti.push({x:Math.random()*W,y:-10,w:6+Math.random()*6,h:10+Math.random()*8,vy:2+Math.random()*3,vx:Math.random()*2-1,r:Math.random()*6,vr:Math.random()*.2-.1,c:colors[Math.random()*colors.length|0]})}
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  // ฝน: ตอนเฉลิมฉลอง หยดฝนจะกลายเป็นสีรุ้ง
+  ctx.lineWidth=1.5;
+  for(const d of drops){
+    ctx.strokeStyle=celebrate?colors[(d.x|0)%colors.length]:'rgba(143,211,255,.45)';
+    ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-2,d.y+d.l);ctx.stroke();
+    d.y+=d.v;if(d.y>H){d.y=-d.l;d.x=Math.random()*W}
+  }
+  for(let i=sparks.length-1;i>=0;i--){const p=sparks[i];
+    p.x+=p.vx;p.y+=p.vy;p.vy+=.06;p.vx*=.99;p.life-=.012;
+    if(p.life<=0){sparks.splice(i,1);continue}
+    ctx.globalAlpha=p.life;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,2.4,0,7);ctx.fill()}
+  ctx.globalAlpha=1;
+  for(let i=confetti.length-1;i>=0;i--){const p=confetti[i];
+    p.y+=p.vy;p.x+=p.vx;p.r+=p.vr;
+    if(p.y>H+20){confetti.splice(i,1);continue}
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()}
+  if(celebrate){drop();if(++fireT%40===0)burst(W*(.15+Math.random()*.7),H*(.1+Math.random()*.4))}
+  requestAnimationFrame(loop);
+}
+loop();
+
+function show(id){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));$(id).classList.add('on')}
+
+const box=$('candles');
+function reset(){
+  box.innerHTML='';for(let i=0;i<17;i++){const c=document.createElement('div');c.className='c';box.appendChild(c)}
+  $('n').textContent='0';$('blow').style.display='none';$('hint').textContent='ກຳລັງຈູດຄຸນທຽນໃຫ້555';
+  celebrate=false;sparks=[];confetti=[];$('msg').textContent='';
+}
+function light(){
+  reset();show('s2');
+  const cs=[...box.children];let i=0;
+  const t=setInterval(()=>{
+    cs[i].classList.add('lit');$('n').textContent=++i;
+    if(i===17){clearInterval(t);$('hint').textContent='ພ້ອມລະ ອະທິຖານກ່ອນ ຄ່ອຍເປົ່າດຽວບໍ່ຄື';$('blow').style.display='block'}
+  },230);
+}
+function type(){
+  const el=$('msg');let i=0;
+  const t=setInterval(()=>{el.textContent=MESSAGE.slice(0,++i);if(i>=MESSAGE.length)clearInterval(t)},45);
+}
+$('go').onclick=light;
+$('again').onclick=light;
+$('blow').onclick=()=>{
+  [...box.children].forEach((c,i)=>setTimeout(()=>{c.classList.remove('lit');c.classList.add('out')},i*40));
+  setTimeout(()=>{
+    show('s3');celebrate=true;fireT=0;
+    for(let k=0;k<4;k++)setTimeout(()=>burst(W*(.2+Math.random()*.6),H*(.15+Math.random()*.3)),k*250);
+    type();
+  },900);
+};
+</script>
+</body>
+</html>
