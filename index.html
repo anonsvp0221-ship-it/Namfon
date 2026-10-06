@@ -19,7 +19,7 @@ h1{font-size:clamp(28px,7vw,40px);font-weight:600}
 p{font-size:18px;line-height:1.7;color:#cfe0f2}
 button{font-family:'Mali',cursive;font-size:20px;font-weight:700;color:#1a1200;background:var(--flame);border:0;border-radius:999px;padding:14px 34px;cursor:pointer;box-shadow:0 0 0 0 rgba(255,194,71,.6);animation:pulse 2s infinite;outline:none;-webkit-appearance:none;appearance:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
 button:focus,button:focus-visible,button:active{outline:none}
-button.ghost{background:transparent;color:var(--drop);border:2px solid var(--drop);animation:none;font-size:16px;padding:10px 24px}
+button.ghost{position:relative;z-index:20;background:var(--flame);color:#1a1200;border:0;animation:none;font-size:18px;padding:12px 28px;box-shadow:0 4px 18px rgba(0,0,0,.45)}
 @keyframes pulse{70%{box-shadow:0 0 0 18px rgba(255,194,71,0)}100%{box-shadow:0 0 0 0 rgba(255,194,71,0)}}
 .count{font-family:'Mali',cursive;font-size:84px;font-weight:700;color:var(--flame);line-height:1;text-shadow:0 0 30px rgba(255,194,71,.5)}
 .candles{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 12px;max-width:340px}
@@ -31,7 +31,8 @@ button.ghost{background:transparent;color:var(--drop);border:2px solid var(--dro
 .c.out::before{transform:scale(0);animation:none;transition:transform .25s}
 @keyframes flick{to{transform:scale(1.08,.94) rotate(3deg)}}
 .big{font-size:clamp(96px,30vw,150px);font-family:'Mali',cursive;font-weight:700;line-height:.9;background:linear-gradient(160deg,var(--drop),var(--mint) 45%,var(--flame));-webkit-background-clip:text;background-clip:text;color:transparent}
-.card{position:relative;z-index:11;background:rgba(13,27,46,.78);border:1px solid rgba(143,211,255,.3);border-radius:22px;padding:22px 24px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.card,.bigbox{position:relative;z-index:11;background:rgba(13,27,46,.78);border:1px solid rgba(143,211,255,.3);border-radius:22px;padding:22px 24px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.bigbox{padding:12px 28px}
 .card p{color:var(--ink);font-size:18px;min-height:7.2em;text-align:left}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -53,7 +54,7 @@ button.ghost{background:transparent;color:var(--drop);border:2px solid var(--dro
   </section>
 
   <section class="scene" id="s3">
-    <h2 style="font-size:clamp(22px,5.5vw,30px)">ສຸສັນວັນເກີດ ນ້ຳຝົນ</h2>
+    <h2 class="card bigbox" style="font-size:clamp(22px,5.5vw,30px)">ສຸສັນວັນເກີດ ນ້ຳຝົນ</h2>
     <div class="big">17</div>
     <div class="card"><p id="msg"></p></div>
     <button class="ghost" id="again">ເບິ່ງອີກເທື່ອຫນຶ່ງ</button>
