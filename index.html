@@ -7,18 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0d1b2e;--bg2:#1b2a4a;--drop:#8fd3ff;--flame:#ffc247;--coral:#ff7a6b;--ink:#f4f7fb;--mint:#7de2c3}
-*{box-sizing:border-box;margin:0}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:radial-gradient(120% 90% at 50% 100%,var(--bg2),var(--bg));color:var(--ink);font-family:'Sarabun',sans-serif;overflow:hidden}
-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
-main{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;padding-top:max(24px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom))}
-.scene{display:none;flex-direction:column;align-items:center;gap:22px;max-width:520px;width:100%}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+main{position:relative;z-index:10;isolation:isolate;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;padding-top:max(24px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.scene{position:relative;z-index:10;display:none;flex-direction:column;align-items:center;gap:22px;max-width:520px;width:100%}
 .scene.on{display:flex;animation:in .9s ease both}
 @keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 h1,h2{font-family:'Mali',cursive;line-height:1.25}
 h1{font-size:clamp(28px,7vw,40px);font-weight:600}
 p{font-size:18px;line-height:1.7;color:#cfe0f2}
-button{font-family:'Mali',cursive;font-size:20px;font-weight:700;color:#1a1200;background:var(--flame);border:0;border-radius:999px;padding:14px 34px;cursor:pointer;box-shadow:0 0 0 0 rgba(255,194,71,.6);animation:pulse 2s infinite}
-button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+button{font-family:'Mali',cursive;font-size:20px;font-weight:700;color:#1a1200;background:var(--flame);border:0;border-radius:999px;padding:14px 34px;cursor:pointer;box-shadow:0 0 0 0 rgba(255,194,71,.6);animation:pulse 2s infinite;outline:none;-webkit-appearance:none;appearance:none;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+button:focus,button:focus-visible,button:active{outline:none}
 button.ghost{background:transparent;color:var(--drop);border:2px solid var(--drop);animation:none;font-size:16px;padding:10px 24px}
 @keyframes pulse{70%{box-shadow:0 0 0 18px rgba(255,194,71,0)}100%{box-shadow:0 0 0 0 rgba(255,194,71,0)}}
 .count{font-family:'Mali',cursive;font-size:84px;font-weight:700;color:var(--flame);line-height:1;text-shadow:0 0 30px rgba(255,194,71,.5)}
@@ -31,7 +31,7 @@ button.ghost{background:transparent;color:var(--drop);border:2px solid var(--dro
 .c.out::before{transform:scale(0);animation:none;transition:transform .25s}
 @keyframes flick{to{transform:scale(1.08,.94) rotate(3deg)}}
 .big{font-size:clamp(96px,30vw,150px);font-family:'Mali',cursive;font-weight:700;line-height:.9;background:linear-gradient(160deg,var(--drop),var(--mint) 45%,var(--flame));-webkit-background-clip:text;background-clip:text;color:transparent}
-.card{background:rgba(255,255,255,.07);border:1px solid rgba(143,211,255,.3);border-radius:22px;padding:22px 24px;backdrop-filter:blur(6px)}
+.card{position:relative;z-index:11;background:rgba(13,27,46,.78);border:1px solid rgba(143,211,255,.3);border-radius:22px;padding:22px 24px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .card p{color:var(--ink);font-size:18px;min-height:7.2em;text-align:left}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -121,7 +121,7 @@ function light(){
   const t=setInterval(()=>{
     cs[i].classList.add('lit');$('n').textContent=++i;
     if(i===17){clearInterval(t);$('hint').textContent='ພ້ອມລະ ອະທິຖານກ່ອນ ຄ່ອຍເປົ່າດຽວບໍ່ຄື';$('blow').style.display='block'}
-  },230);
+  },500);
 }
 function type(){
   const el=$('msg');let i=0;
